@@ -1,0 +1,162 @@
+redis:
+  hostname: redis
+  domainname: localdomain
+  build: redis
+
+mredis:
+  build: mredis
+  hostname: mredis
+  domainname: localdomain
+
+fountain:
+  build: fountain
+  hostname: fountain
+  domainname: localdomain
+  links:
+    - redis:redis
+  command: /sbin/my_init
+
+planner:
+  build: planner
+  hostname: planner
+  domainname: localdomain
+  links:
+    - fountain:fountain
+  command: /sbin/my_init
+
+fragment:
+  build: fragment
+  hostname: fragment
+  domainname: localdomain
+  links:
+    - scmharvester:scmharvester
+    - ciharvester:ciharvester
+    - scmmetrics:scmmetrics
+    - cimetrics:cimetrics
+    - fountain:fountain
+
+scmmetrics:
+  build: scmmetrics
+  hostname: scmmetrics
+  domainname: localdomain
+  links:
+    - scmharvester:scmharvester
+    - planner:planner
+    - fountain:fountain
+    - mredis:redis
+  command: /sbin/my_init
+
+cimetrics:
+  build: cimetrics
+  hostname: cimetrics
+  domainname: localdomain
+  links:
+    - scmharvester:scmharvester
+    - ciharvester:ciharvester
+    - planner:planner
+    - fountain:fountain
+    - mredis:redis
+  command: /sbin/my_init
+
+enhancer:
+  build: enhancer
+  hostname: enhancer
+  domainname: localdomain
+  links:
+    - redis:redis
+  command: /sbin/my_init
+  environment:
+    - ENH_GITLAB_IP=127.0.0.1
+    - ENH_GITLAB_PORT=80
+    - ENH_GITLAB_USER=root
+    - ENH_GITLAB_PASS=12345678
+    - ENH_REDIS_IP=redis
+    - ENH_REDIS_PORT=6379
+    - ENH_REDIS_DB=0
+
+scmharvester:
+  build: scmharvester
+  hostname: scmharvester
+  domainname: localdomain
+  links:
+    - enhancer:enhancer
+  command: /sbin/my_init
+
+ciharvester:
+  build: ciharvester
+  hostname: ciharvester
+  domainname: localdomain
+  command: /sbin/my_init
+  mem_limit: 1024m
+
+sdhapi:
+  build: sdhapi
+  hostname: sdhapi
+  domainname: localdomain
+  links:
+    - nginx:nginx
+  environment:
+    - USERPROFILE=/usr/lib/node_modules/sdh-api
+    - PLANNER_ADDR=http://nginx
+    - PLANNER_PORT=80
+    - FRAGMNT_ADDR=http://nginx
+    - FRAGMNT_PORT=80
+    - SDH_API_HOST="localhost:9002"
+  ports:
+    - "9002:8080"
+
+mysql:
+  hostname: mysql
+  domainname: localdomain
+  build: mysql
+  command: /sbin/my_init
+  environment:
+    - MYSQL_PASS=secret
+
+phpmyadmin:
+  hostname: phpmyadmin
+  domainname: localdomain
+  build: phpmyadmin
+  command: /sbin/my_init
+  environment:
+    - MYSQL_USER=root
+    - MYSQL_PASS=secret
+    - MYSQL_ADDR=mysql
+    - MYSQL_PORT=3306
+  links:
+    - mysql:mysql
+
+laravel:
+  hostname: laravel
+  domainname: localdomain
+  build: laravel
+  command: /sbin/my_init
+  environment:
+    - MYSQL_USER=root
+    - MYSQL_PASS=secret
+    - MYSQL_ADDR=mysql
+    - MYSQL_PORT=3306
+    - SDH_API_HOST=http://sdhapi:8080
+    - LARAVEL_DB=homestead
+  links:
+    - mysql:mysql
+    - sdhapi:sdhapi
+  ports:
+    - "9003:80"
+
+nginx:
+  build: nginx
+  hostname: nginx
+  domainname: localdomain
+  links:
+    - fragment:fragment
+    - fountain:fountain
+    - enhancer:enhancer
+    - scmharvester:scmharvester
+    - scmmetrics:scmmetrics
+    - ciharvester:ciharvester
+    - cimetrics:cimetrics
+  ports:
+    - "9001:80"
+  volumes:
+    - ./nginx/nginx.conf:/etc/nginx/nginx.conf
