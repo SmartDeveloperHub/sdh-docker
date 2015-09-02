@@ -1,0 +1,5 @@
+.DS_Store
+*/.vagrant
+.vagrant
+sdh-platform
+sdh-platform-web
