@@ -105,6 +105,15 @@ sdhapi:
   ports:
     - "9002:8080"
 
+ldap:
+  build: ldap
+  hostname: ldap
+  domainname: localdomain
+  ports:
+    - "9005:80"
+    - "9010:389"
+    - "9011:636"
+
 mysql:
   hostname: mysql
   domainname: localdomain
