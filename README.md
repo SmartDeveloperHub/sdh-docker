@@ -1,4 +1,4 @@
-# SDH-Docker
+# SDH-Docker (Demo Release H1)
 =====
 
 Docker ecosystem for SmartDeveloperHub services (Platform &amp; Web)
