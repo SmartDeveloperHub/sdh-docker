@@ -81,6 +81,8 @@ scmharvester:
   links:
     - enhancer:enhancer
   command: /sbin/my_init
+  environment:
+    - GITLAB_ENHANCER=http://enhancer:5000/api
 
 ciharvester:
   build: ciharvester
