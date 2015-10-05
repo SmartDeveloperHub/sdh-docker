@@ -21,7 +21,7 @@ These tags must correspond to either branch names or tags of the following repos
 
 The specific command to build and run the Vagrant VM is `vagrant up`.
 
-Vagrant creates a VM that contains Docker and docker-compose out of the box. In case you need to manage any of the aforementioned containers, just type vagrant ssh and proceed as explained in section Using Docker-compose.
+Vagrant creates a VM that contains Docker and docker-compose out of the box. In case you need to manage any of the aforementioned containers, just type vagrant ssh in order to interact directly with the Docker host (docker-compose available).
 
 ##License
 
