@@ -1,9 +1,6 @@
 #!/bin/sh
 
-SDH-PLATFORM="sdh-platform"
-SDH-WEB="sdh-platform-web"
-
-cd $SDH-PLATFORM
+cd /home/vagrant/sdh-platform
 docker-compose start
-cd ../$SDH-WEB
+cd ../sdh-platform-web
 docker-compose start
