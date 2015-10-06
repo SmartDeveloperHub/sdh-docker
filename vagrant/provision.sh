@@ -4,4 +4,4 @@ cp /vagrant/*.sh .
 dos2unix generate.sh
 dos2unix startup.sh
 dos2unix shutdown.sh
-./generate.sh h1
+./generate.sh master
