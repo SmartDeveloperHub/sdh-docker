@@ -9,8 +9,8 @@ The way this repository has to be used depends on the availability of Docker in 
 ### Docker (recommended)
 
 1. Run the shell script passing an argument to choose the version you want to deploy:
-  * `$ sh generate_ecosystem.sh master` *(latest version)*
-  * `$ sh generate_ecosystem.sh h1` *(milestone 1 version)*
+  * `$ sh generate.sh master` *(latest version)*
+  * `$ sh generate.sh h1` *(milestone 1 version)*
 
 
 These tags must correspond to either branch names or tags of the following repositories:
